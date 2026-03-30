@@ -1,4 +1,5 @@
-// Vercel Serverless Function — timeout configured in vercel.json
+// Edge Runtime — avoids Node.js module quirks, has native fetch
+export const config = { runtime: 'edge' }
 
 const SYSTEM_PROMPT = `You are a Product Operations analyst for Metropolis Technologies, the largest AI-powered parking platform in the US (4,200+ locations, 21M members).
 
@@ -49,21 +50,23 @@ P0=revenue loss/legal/safety, P1=significant user failure, P2=degraded with work
 Product Bug=engineering fix, Ops Issue=training/process, UX Friction=design/copy, Unknown=unclear.
 Return ONLY valid JSON. No markdown, no preamble.`
 
-export default async function handler(req, res) {
-  // Outer try/catch ensures we always return JSON, never a bare crash
+const json = (data, status = 200) =>
+  new Response(JSON.stringify(data), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  })
+
+export default async function handler(req) {
   try {
-    if (req.method !== 'POST') {
-      return res.status(405).json({ error: 'Method not allowed' })
-    }
+    if (req.method !== 'POST') return json({ error: 'Method not allowed' }, 405)
 
     const apiKey = process.env.ANTHROPIC_API_KEY
-    if (!apiKey) {
-      return res.status(500).json({ error: 'ANTHROPIC_API_KEY environment variable is not set in Vercel.' })
-    }
+    if (!apiKey) return json({ error: 'ANTHROPIC_API_KEY is not set in Vercel environment variables.' }, 500)
 
-    const { inputs } = req.body || {}
+    const body = await req.json()
+    const { inputs } = body
     if (!inputs || !Array.isArray(inputs) || inputs.length === 0) {
-      return res.status(400).json({ error: 'inputs array is required and must not be empty.' })
+      return json({ error: 'inputs array is required and must not be empty.' }, 400)
     }
 
     const userContent = inputs
@@ -89,11 +92,8 @@ export default async function handler(req, res) {
 
     if (!upstream.ok) {
       let errMsg = `Anthropic API error ${upstream.status}`
-      try {
-        const errJson = JSON.parse(upstreamText)
-        errMsg = errJson?.error?.message || errMsg
-      } catch (_) {}
-      return res.status(upstream.status).json({ error: errMsg })
+      try { errMsg = JSON.parse(upstreamText)?.error?.message || errMsg } catch (_) {}
+      return json({ error: errMsg }, upstream.status)
     }
 
     const data = JSON.parse(upstreamText)
@@ -101,9 +101,8 @@ export default async function handler(req, res) {
     const cleaned = rawText.replace(/^```json\n?/i, '').replace(/\n?```$/, '').trim()
     const digest = JSON.parse(cleaned)
 
-    return res.status(200).json(digest)
+    return json(digest)
   } catch (err) {
-    console.error('synthesize error:', err)
-    return res.status(500).json({ error: err.message || 'Internal server error' })
+    return json({ error: err.message || 'Internal server error' }, 500)
   }
 }
