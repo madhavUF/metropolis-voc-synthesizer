@@ -795,7 +795,9 @@ export default function App() {
         body: JSON.stringify({ inputs: inputQueue }),
       })
 
-      const data = await response.json()
+      const text = await response.text()
+      if (!text) throw new Error('Server returned an empty response. Check that ANTHROPIC_API_KEY is set in Vercel → Settings → Environment Variables, then redeploy.')
+      const data = JSON.parse(text)
       if (!response.ok) throw new Error(data.error || `Server error ${response.status}`)
       setDigest(data)
     } catch (err) {
