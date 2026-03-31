@@ -37,6 +37,17 @@ code, .font-mono {
   }
 }
 
+/* Demo tour spotlight highlight */
+.tour-highlighted {
+  outline: 3px solid #6366F1 !important;
+  outline-offset: 6px;
+  border-radius: 12px !important;
+  box-shadow: 0 0 0 9px rgba(99, 102, 241, 0.12) !important;
+  transition: outline 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  z-index: 45;
+}
+
 /* Print styles for PDF export */
 @media print {
   .no-print { display: none !important; }

@@ -1,5 +1,5 @@
 export const MOCK_DATA = [
-  // ── Support Tickets ──────────────────────────────────────────────────────
+  // ── Support Tickets ──────────────────────────────────────────────────────────
   {
     id: 1,
     source: 'Support Ticket',
@@ -51,7 +51,7 @@ export const MOCK_DATA = [
     text: 'Was double-charged for the same parking session at Houston Galleria. I left and came back within 90 minutes and it treated it as two separate sessions — $18 each. The lot signage says returns within 2 hours are free. Need $18 refund.',
   },
 
-  // ── Field Ops Reports ─────────────────────────────────────────────────────
+  // ── Field Ops Reports ─────────────────────────────────────────────────────────
   {
     id: 11,
     source: 'Field Ops Report',
@@ -60,7 +60,7 @@ export const MOCK_DATA = [
   {
     id: 12,
     source: 'Field Ops Report',
-    text: 'Nashville downtown cluster (locations 2891, 2892, 2894): Getting multiple operator calls about Orion notices being sent to customers who paid via app. Happening approximately 8x/day across 3 locations. Possible sync issue between payment confirmation and Orion trigger event.',
+    text: 'Nashville downtown cluster (locations 2891, 2892, 2894): Getting multiple operator calls about Orion notices going to customers who paid via app. Happening approximately 8x/day across 3 locations. Possible sync issue between payment confirmation and Orion trigger event.',
   },
   {
     id: 13,
@@ -93,7 +93,7 @@ export const MOCK_DATA = [
     text: 'Dallas Deep Ellum new location onboarding: Took 11 days vs. SLA of 5 days. Operator very frustrated and mentioned competitor outreach. Root cause: unclear handoff between hardware install team and software activation team. No single owner for onboarding end-to-end.',
   },
 
-  // ── App Store Reviews ────────────────────────────────────────────────────
+  // ── App Store Reviews ────────────────────────────────────────────────────────
   {
     id: 19,
     source: 'App Review',
@@ -125,7 +125,7 @@ export const MOCK_DATA = [
     text: '★★ — Charged me twice for the same parking session. Support took 12 days to respond. Eventually refunded but the back-and-forth was exhausting. Reliability issues are a real problem if you park here regularly.',
   },
 
-  // ── Internal Escalations ─────────────────────────────────────────────────
+  // ── Internal Escalations ─────────────────────────────────────────────────────
   {
     id: 25,
     source: 'Internal Escalation',
@@ -162,3 +162,101 @@ export const MOCK_DATA = [
     text: '[Ops → Product] Hospitality pilot update — the hotel valet team at the Austin Marriott location is asking about tipping functionality in the valet app. Guests are asking how to tip and there\'s no UI for it. Valet operators say this is standard in competitor apps. Could be blocking hospitality vertical expansion.',
   },
 ]
+
+// Pre-generated digest — used for the demo tour (no API call required)
+export const DEMO_DIGEST = {
+  executive_summary: "This week's 31 inputs surface two P0 issues requiring immediate escalation: a Nashville webhook latency spike causing Orion to fire before payment confirmation (generating ~40 false-positive refund requests/day), and a v4.2.1 regression that pushed subscription cancellation failures from 8% to 34% overnight. Billing & Payment and Member App are the highest-volume problem areas, together accounting for 48% of all inputs. Notably, 19% of this week's issues are ops or UX problems — not product bugs — meaning nearly 1 in 5 can be resolved through training or copy changes without an engineering ticket.",
+  themes: [
+    {
+      name: "Orion False Positives — Nashville Webhook Latency",
+      volume: 5,
+      severity: "P0",
+      type: "Product Bug",
+      product_area: "Orion",
+      representative_quote: "Webhook p99 latency is 4.2s. Orion fires before payment is confirmed — false positives at scale.",
+      suggested_action: "Escalate to billing engineering today — fix webhook ordering so Orion only triggers after confirmed payment"
+    },
+    {
+      name: "Subscription Cancellation Regression (v4.2.1)",
+      volume: 6,
+      severity: "P0",
+      type: "Product Bug",
+      product_area: "Member App",
+      representative_quote: "Cancellation failure rate hit 34%, up from 8%. Started after v4.2.1 release on Tuesday. ~60 cases/day.",
+      suggested_action: "Hotfix or rollback v4.2.1 — assign to Member App PM, NPS is cratering and users are filing chargebacks"
+    },
+    {
+      name: "Misleading Orion Collection Notice Design",
+      volume: 4,
+      severity: "P1",
+      type: "UX Friction",
+      product_area: "Orion",
+      representative_quote: "The notice looks like an official government citation with seal graphics. Very deceptive.",
+      suggested_action: "Redesign Orion notice templates — clearly identify Metropolis as sender, remove government-style graphics; loop in legal"
+    },
+    {
+      name: "Gate & Camera Hardware Failures",
+      volume: 4,
+      severity: "P1",
+      type: "Product Bug",
+      product_area: "Gate & Hardware",
+      representative_quote: "Camera unit 2 offline since Monday. Estimated 12–15 vehicles missed per day. IT ticket ignored for 3 days.",
+      suggested_action: "Escalate IT SLA breach — implement hardware uptime monitoring with 1-hour alerting threshold"
+    },
+    {
+      name: "Billing Overcharges vs. Posted Signage Rates",
+      volume: 4,
+      severity: "P1",
+      type: "Product Bug",
+      product_area: "Billing & Payment",
+      representative_quote: "Was charged $47 but the sign said $25 max daily. This is a billing error.",
+      suggested_action: "Audit rate enforcement logic — billing engineering to reconcile system-applied rates against signage configurations"
+    },
+    {
+      name: "App Auto-Logout Bug (iOS)",
+      volume: 3,
+      severity: "P2",
+      type: "Product Bug",
+      product_area: "Member App",
+      representative_quote: "App keeps logging me out every time I close it. Running iOS 17.4 on iPhone 15.",
+      suggested_action: "File bug with Member App team — likely token refresh regression in recent iOS build, add to current sprint"
+    },
+    {
+      name: "EV Charging Add-On Missing from Valet App UI",
+      volume: 3,
+      severity: "P2",
+      type: "Ops Issue",
+      product_area: "Valet Product",
+      representative_quote: "Training doc references a 'Configure Add-ons' button that doesn't exist in the current version.",
+      suggested_action: "Update training docs to match v3.1 UI — or restore the feature if removed unintentionally; fueling pilot at risk"
+    },
+    {
+      name: "NOI Dashboard Missing EV Charging Revenue",
+      volume: 2,
+      severity: "P2",
+      type: "Product Bug",
+      product_area: "Operator Dashboard",
+      representative_quote: "Property owner asked why EV charging revenue isn't in NOI totals. 60 days from renewal.",
+      suggested_action: "Add EV revenue line to NOI dashboard — flag Chicago Fulton Market renewal as at-risk in CRM"
+    }
+  ],
+  product_area_breakdown: {
+    "Member App":         { count: 9,  p0: 1, p1: 1, p2: 2, p3: 0 },
+    "Billing & Payment":  { count: 8,  p0: 0, p1: 3, p2: 2, p3: 0 },
+    "Orion":              { count: 7,  p0: 2, p1: 2, p2: 0, p3: 0 },
+    "Gate & Hardware":    { count: 5,  p0: 0, p1: 2, p2: 2, p3: 0 },
+    "Valet Product":      { count: 4,  p0: 0, p1: 0, p2: 2, p3: 1 },
+    "Operator Dashboard": { count: 3,  p0: 0, p1: 1, p2: 1, p3: 0 },
+    "New Verticals":      { count: 2,  p0: 0, p1: 0, p2: 2, p3: 0 },
+    "CV Platform":        { count: 1,  p0: 0, p1: 1, p2: 0, p3: 0 }
+  },
+  bug_ops_ux_split: { bug: 20, ops: 6, ux: 4, unknown: 1 },
+  recommended_actions: [
+    "[P0] Fix Orion webhook ordering — payment confirmation must precede Orion trigger — assign to Billing Engineering, target EOD today",
+    "[P0] Hotfix or rollback v4.2.1 subscription cancellation regression — assign to Member App PM, 60 cases/day is unsustainable",
+    "[P1] Redesign Orion collection notice templates — remove government-style graphics, clearly identify Metropolis — loop in Legal + Design this week",
+    "[P1] Escalate Seattle camera IT ticket and implement uptime monitoring — hardware failures causing daily revenue leakage",
+    "[P2] Update Valet app training docs + add EV revenue to NOI dashboard before Chicago Fulton Market renewal meeting"
+  ],
+  total_inputs: 31
+}
