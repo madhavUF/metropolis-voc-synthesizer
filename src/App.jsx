@@ -55,7 +55,7 @@ const DEMO_STEPS = [
   {
     id: 'synthesize',
     title: '③ One Click to Synthesize',
-    body: 'Claude reads all 31 inputs, groups them into themes, assigns severity (P0–P3) and issue type (Bug / Ops / UX), maps each theme to a product area owner, and generates a digest.\n\nClick the button below to run the synthesis now.',
+    body: 'The VoC tool reads all 31 inputs, groups them into themes, assigns severity (P0–P3) and issue type (Bug / Ops / UX), maps each theme to a product area owner, and generates a digest.\n\nClick the button below to run the synthesis now.',
     target: 'tour-synthesize',
     cta: 'Synthesize 31 inputs →',
     action: 'synthesize',
@@ -172,10 +172,10 @@ function DemoTour({ step, stepIndex, totalSteps, onNext, onSkip }) {
           {/* Header */}
           <div className="bg-gradient-to-br from-indigo-950 to-slate-900 px-8 pt-8 pb-6">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center font-display font-black text-white text-lg">
-                M↑
+              <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-xl">
+                📊
               </div>
-              <span className="text-xs font-mono text-indigo-300 uppercase tracking-widest">Metropolis Technologies</span>
+              <span className="text-xs font-mono text-indigo-300 uppercase tracking-widest">Product Operations Tool</span>
             </div>
             <h2 className="font-display font-bold text-white text-2xl leading-tight">{step.title}</h2>
           </div>
@@ -712,10 +712,10 @@ function Header({ inputCount, weekLabel, onRestartDemo }) {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center font-display font-black text-white text-lg leading-none">M↑</div>
+            <div className="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center text-lg leading-none">📊</div>
             <div>
               <p className="font-display font-bold text-white text-lg leading-tight tracking-tight">VoC Synthesizer</p>
-              <p className="text-xs text-slate-500 font-mono leading-none">Metropolis Technologies</p>
+              <p className="text-xs text-slate-500 font-mono leading-none">Product Operations Tool</p>
             </div>
           </div>
           <div className="hidden sm:block w-px h-8 bg-slate-700" />
@@ -819,7 +819,7 @@ export default function App() {
 
       <footer className="mt-12 pb-6 text-center no-print">
         <p className="text-xs text-slate-400 font-mono">
-          Metropolis VoC Synthesizer · Powered by Claude · Built for Director of Product Operations
+          VoC Synthesizer · Built for Director of Product Operations
         </p>
       </footer>
 
